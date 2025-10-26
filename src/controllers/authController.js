@@ -19,8 +19,6 @@ export const register = async (req, res) => {
       role: role || 'passenger', // Default to 'passenger' if role is not provided
     });
 
-    
-
     // Generate JWT token
     res.json({ token: generateToken(user), message: "User registered successfully" });
   } catch (err) {
