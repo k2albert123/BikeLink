@@ -26,6 +26,7 @@ export const deleteUser = async (req, res) => {
   const { userId } = req.params;
 
   if (!userId || isNaN(userId)) {
+    console.log(userId)
     return res.status(400).json({
       success: false,
       message: 'Invalid user ID'
@@ -42,7 +43,7 @@ export const deleteUser = async (req, res) => {
         success: false,
         message: 'User not found'
       });
-    }
+    } 
 
     res.status(200).json({
       success: true,
