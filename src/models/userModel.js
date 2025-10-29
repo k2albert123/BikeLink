@@ -32,6 +32,10 @@ const User = sequelize.define(
       type: DataTypes.ENUM('passenger', 'rider', 'admin'),
       defaultValue: 'passenger',
     },
+    status: {
+      type: DataTypes.ENUM('available', 'busy'),
+      defaultValue: 'available',
+    },
     vehicle_type: {
       type: DataTypes.ENUM('motorcycle', 'bicycle', 'none'),
       defaultValue: 'none',

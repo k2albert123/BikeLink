@@ -25,7 +25,7 @@ const Ride = sequelize.define(
         model: User,
         key: 'id',
       },
-      allowNull: true,
+      allowNull: false,
     },
     pickup_lat: {
       type: DataTypes.FLOAT,
@@ -42,10 +42,6 @@ const Ride = sequelize.define(
     dropoff_lng: {
       type: DataTypes.FLOAT,
       allowNull: false,
-    },
-    status: {
-      type: DataTypes.ENUM('pending', 'accepted', 'in_progress', 'completed', 'cancelled'),
-      defaultValue: 'pending',
     },
     distance_km: {
       type: DataTypes.FLOAT,
@@ -66,7 +62,6 @@ const Ride = sequelize.define(
   }
 );
 
-// Define associations
 User.hasMany(Ride, { foreignKey: 'passenger_id', as: 'passenger_rides' });
 User.hasMany(Ride, { foreignKey: 'rider_id', as: 'rider_rides' });
 Ride.belongsTo(User, { foreignKey: 'passenger_id', as: 'passenger' });

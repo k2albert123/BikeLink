@@ -6,7 +6,8 @@ import dotenv from 'dotenv';
 import { Server } from 'socket.io';
 import { sequelize, syncDatabase } from './config/database.js';
 import authRoutes from './routes/authRoutes.js';
-import rideRoutes from './routes/rideRoutes.js';
+import ridersRoutes from './routes/RiderRouter.js';
+import passengerRoutes from './routes/PassengerRoutes.js'
 
 dotenv.config();
 
@@ -18,7 +19,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
-app.use('/api/rides', rideRoutes);
+app.use('/api/riders', ridersRoutes);
+app.use('/api/passengers', passengerRoutes);
 
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
