@@ -4,28 +4,39 @@ import { generateToken } from '../utils/jwt.js';
 
 export const register = async (req, res) => {
   try {
-    const { name, email, password, phone, role } = req.body;
+    const { name, full_name, email, password, phone, role } = req.body;
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        "message": "Invalid email format"
+      });
+    }
 
     const userExist = await User.findOne({ where: { email } });
-    
-    if(userExist) {
-      res.status(400).json({
+
+    if (userExist) {
+      return res.status(400).json({
         "message": "User already exists"
-      })
+      });
     }
 
 
     const hashed = await bcrypt.hash(password, 10);
 
     const user = await User.create({
-      full_name: name,
+      full_name: full_name || name,
       email,
       phone,
       password: hashed,
       role: role || 'passenger',
     });
 
-    res.json({ token: generateToken(user), message: "User registered successfully" });
+    // Exclude password from response
+    const userWithoutPassword = { ...user.toJSON() };
+    delete userWithoutPassword.password;
+    res.json({ token: generateToken(user), user: userWithoutPassword, message: "User registered successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -46,13 +57,16 @@ export const login = async (req, res) => {
       return res.status(400).json({ msg: 'Invalid credentials' });
     }
 
-    res.json({ token: generateToken(user) });
+    // Exclude password from response
+    const userWithoutPassword = { ...user.toJSON() };
+    delete userWithoutPassword.password;
+    res.json({ token: generateToken(user), user: userWithoutPassword });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-export const updateLocation = async(req, res) => {
+export const updateLocation = async (req, res) => {
   try {
     const { latitude, longitude } = req.body;
     const userId = req.user.id;
@@ -72,6 +86,6 @@ export const updateLocation = async(req, res) => {
   }
 }
 
-export const logout = async(req, res) => {
-   
+export const logout = async (req, res) => {
+
 }
